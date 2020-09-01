@@ -51,8 +51,9 @@
 # sca46: simple RETURN transformation
 # sca47: Issue #578 regression
 # sca48: SCA with model config and separate size and iteration dimension variables
+# sca49: SCA with model config and nested sca sections
 
-foreach(loop_var RANGE 1 48)
+foreach(loop_var RANGE 1 49)
   if(NOT ${loop_var} EQUAL 30)
     set(CLAW_FLAGS_TARGET_CPU_sca${loop_var} --directive=none)
   endif()
@@ -84,6 +85,10 @@ set(
 set(
   CLAW_FLAGS_sca48
   --model-config=${CMAKE_CURRENT_SOURCE_DIR}/iteration_size_model.toml
+)
+set(
+  CLAW_FLAGS_sca49
+  -v --debug --model-config=${CMAKE_CURRENT_SOURCE_DIR}/iteration_size_model.toml
 )
 
 claw_add_advanced_test_set(
