@@ -23,6 +23,7 @@ CONTAINS
       a(k) = a(k) + b(k)
     END DO
 
+    !$claw sca forward
     CALL compute_column(nz, q, t)
 
   END SUBROUTINE compute_all
@@ -38,6 +39,8 @@ CONTAINS
     !$claw end model-data
     INTEGER :: k                  ! Loop index
     REAL :: c                     ! Coefficient
+
+    !$claw sca routine
 
     c = 5.345
     DO k = 2, nz
