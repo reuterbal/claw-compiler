@@ -152,7 +152,18 @@ public class ClawTranslator implements Translator {
     if(analyzedPragma.hasClause(ClawClause.FORWARD)) {
       addTransformation(xcodeml, new ScaForward(analyzedPragma));
     } else if(analyzedPragma.hasClause(ClawClause.ROUTINE)) {
-      addTransformation(xcodeml, new ScaRoutine(analyzedPragma));
+      if(Context.get().getTarget() == Target.GPU) {
+	addTransformation(xcodeml, new ScaRoutine(analyzedPragma));
+      } else {
+        if(Configuration.get().getParameter(Configuration.CPU_STRATEGY).
+            equalsIgnoreCase(Configuration.CPU_STRATEGY_FUSION))
+        {
+          addTransformation(xcodeml,
+              new ScaCPUvectorizeGroup(analyzedPragma, true));
+        } else {
+          addTransformation(xcodeml, new ScaCPUvectorizeGroup(analyzedPragma));
+        }
+      }
     } else {
       if(Context.get().getTarget() == Target.GPU) {
         addTransformation(xcodeml, new ScaGPU(analyzedPragma));

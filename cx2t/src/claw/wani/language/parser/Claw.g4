@@ -150,6 +150,7 @@ directive[ClawPragma l]
      {
        $l.setDirective(ClawDirective.SCA);
        $l.setClause(ClawClause.ROUTINE);
+       $l.setScaModelConfig();
      }
    // SCA directive with define dimension
    | define_option[$l]+ SCA data_over_clause[$l]* sca_clauses[$l] EOF
