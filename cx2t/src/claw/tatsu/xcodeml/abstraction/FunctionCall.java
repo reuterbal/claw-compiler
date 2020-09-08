@@ -195,8 +195,10 @@ public class FunctionCall extends Xnode {
         FbasicType btParameter =
             fctTypeHolder.getTypeTable().getBasicType(parameter);
         FbasicType btArg = xcodeml.getTypeTable().getBasicType(arg);
-        if((arrayOnly && !btArg.isArray() && !btArg.isAllocatable())
-            || !intent.isCompatible(btParameter.getIntent()))
+        // If any range indices are present, this is a promoted array and we cannot skip it.
+        List<Xnode> indexRanges = arg.matchAll(Xcode.INDEX_RANGE);
+        if(indexRanges.size() == 0 && ((arrayOnly && !btArg.isArray() && !btArg.isAllocatable())
+				      || !intent.isCompatible(btParameter.getIntent())))
         {
           continue;
         }
