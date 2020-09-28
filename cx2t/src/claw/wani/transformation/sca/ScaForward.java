@@ -785,8 +785,10 @@ public class ScaForward extends ClawTransformation {
 
           // Adapt the reference in the assignment statement
           for(String id : _promotedVar) {
-            _promotions.get(id).resetFlags();
-            Field.adaptArrayRef(_promotions.get(id), assignment, false, xcodeml);
+	    if(_promotions.containsKey(id)) {
+              _promotions.get(id).resetFlags();
+              Field.adaptArrayRef(_promotions.get(id), assignment, false, xcodeml);
+            }
           }
 
           // If the array is a target, check if we have to promote a pointer
