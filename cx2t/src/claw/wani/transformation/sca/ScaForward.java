@@ -457,8 +457,10 @@ public class ScaForward extends ClawTransformation {
     // In flatten mode, arguments are demoted if needed.
     if(_flatten) {
       for(Xnode arg : _fCall.arguments()) {
-        if(arg.is(Xcode.F_ARRAY_REF) && arg.matchDirectDescendant(
-            Arrays.asList(Xcode.INDEX_RANGE, Xcode.ARRAY_INDEX)) != null)
+        if( (arg.is(Xcode.F_ARRAY_REF) && arg.matchDirectDescendant(
+	       Arrays.asList(Xcode.INDEX_RANGE, Xcode.ARRAY_INDEX)) != null) ||
+	    (arg.is(Xcode.NAMED_VALUE) && (arg.matchAll(Xcode.INDEX_RANGE) != null ||
+					   arg.matchAll(Xcode.ARRAY_INDEX) != null) ) )
         {
           List<Xnode> arrayIndexes = arg.matchAll(Xcode.ARRAY_INDEX);
           for(Xnode n : arrayIndexes) {
