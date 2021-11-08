@@ -23,14 +23,14 @@ include(cmake/omni_compiler.cmake)
 # Load all variables from file
 include(properties.cmake)
 
-set(OMNI_COMPILER_SUBMODULE ${CMAKE_SOURCE_DIR}/omni-compiler)
+set(OMNI_COMPILER_SUBMODULE ${CMAKE_CURRENT_SOURCE_DIR}/omni-compiler)
 
 if(OFFLINE)
   message(STATUS "CLAW Compiler offline compilation enabled")
 endif()
 
 # Recover commit hash for the top repositiory
-git_get_rev_hash(${CMAKE_SOURCE_DIR} CLAWFC_GIT_HASH)
+git_get_rev_hash(${CMAKE_CURRENT_SOURCE_DIR} CLAWFC_GIT_HASH)
 message(STATUS "CLAW Compiler version ${CLAWFC_GIT_HASH}")
 
 # Recover commit hash for the OMNI Compiler subumodule
