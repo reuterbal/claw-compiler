@@ -18,7 +18,7 @@ if(NOT OFFLINE)
     COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
     ${ANT_FLAGS}
     -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-    -Ddist.dir=${CMAKE_BINARY_DIR}/build
+    -Ddist.dir=${PROJECT_BINARY_DIR}/build
     init
     COMMENT "Resolving dependencies for the build"
   )
@@ -31,7 +31,7 @@ add_custom_command(
   COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
   ${ANT_FLAGS}
   -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-  -Ddist.dir=${CMAKE_BINARY_DIR}/build
+  -Ddist.dir=${PROJECT_BINARY_DIR}/build
   ${DISABLE_RESOLVE}
   COMMENT "Building CLAW XcodeML/F to XcodeML/F unit tests"
 )
@@ -44,8 +44,8 @@ add_test(
   NAME junit-tatsu
   COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
   -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-  -Ddist.dir=${CMAKE_BINARY_DIR}/build
-  -Dtest.reports=${CMAKE_BINARY_DIR}/reports
+  -Ddist.dir=${PROJECT_BINARY_DIR}/build
+  -Dtest.reports=${PROJECT_BINARY_DIR}/reports
   ${DISABLE_RESOLVE}
   junit-tatsu
 )
@@ -56,8 +56,8 @@ add_test(
   NAME junit-shenron
   COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
   -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-  -Ddist.dir=${CMAKE_BINARY_DIR}/build
-  -Dtest.reports=${CMAKE_BINARY_DIR}/reports
+  -Ddist.dir=${PROJECT_BINARY_DIR}/build
+  -Dtest.reports=${PROJECT_BINARY_DIR}/reports
   ${DISABLE_RESOLVE}
   junit-shenron
 )
@@ -68,8 +68,8 @@ add_test(
   NAME junit-wani
   COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
   -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-  -Ddist.dir=${CMAKE_BINARY_DIR}/build
-  -Dtest.reports=${CMAKE_BINARY_DIR}/reports
+  -Ddist.dir=${PROJECT_BINARY_DIR}/build
+  -Dtest.reports=${PROJECT_BINARY_DIR}/reports
   ${DISABLE_RESOLVE}
   junit-wani
 )

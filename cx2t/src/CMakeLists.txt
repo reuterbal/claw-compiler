@@ -17,7 +17,7 @@ if(NOT OFFLINE)
     COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
     ${ANT_FLAGS}
     -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-    -Ddist.dir=${CMAKE_BINARY_DIR}/build
+    -Ddist.dir=${PROJECT_BINARY_DIR}/build
     init
     COMMENT "Resolving dependencies for the build"
   )
@@ -30,7 +30,7 @@ add_custom_command(
   COMMAND ${Ant_EXECUTABLE} -f ${CMAKE_CURRENT_SOURCE_DIR}/build.xml
   ${ANT_FLAGS}
   -Dantfile.dir=${CMAKE_CURRENT_SOURCE_DIR}
-  -Ddist.dir=${CMAKE_BINARY_DIR}/build
+  -Ddist.dir=${PROJECT_BINARY_DIR}/build
   -Dantlr4.jar="${ANTLR4_NAME}.jar"
   -Dcommoncli.jar="${COMMON_CLI_NAME}.jar"
   ${DISABLE_RESOLVE}
