@@ -25,39 +25,51 @@
 
 include(FindPackageHandleStandardArgs)
 
-find_program(Ant_EXECUTABLE NAMES ant PATHS $ENV{ANT_HOME}/bin)
-find_package_handle_standard_args(Ant DEFAULT_MSG Ant_EXECUTABLE)
-mark_as_advanced(Ant_EXECUTABLE)
+set ( _ANT_HOME "" )
+if ( ANT_HOME AND IS_DIRECTORY "${ANT_HOME}" )
+    set ( _ANT_HOME "${ANT_HOME}" )
+else()
+    set ( _ENV_ANT_HOME "" )
+    if ( DEFINED ENV{ANT_HOME} )
+        file ( TO_CMAKE_PATH "$ENV{ANT_HOME}" _ENV_ANT_HOME )
+    endif ()
+    if ( _ENV_ANT_HOME AND IS_DIRECTORY "${_ENV_ANT_HOME}" )
+        set ( _ANT_HOME "${_ENV_ANT_HOME}" )
+    endif ()
+    unset ( _ENV_ANT_HOME )
+endif()
+
+find_program(Ant_EXECUTABLE NAMES ant HINTS ${_ANT_HOME}/bin)
+
+unset ( _ANT_HOME )
 
 if(Ant_EXECUTABLE)
-  execute_process(COMMAND ${Ant_EXECUTABLE} -version
-    RESULT_VARIABLE res
-    OUTPUT_VARIABLE var
-    ERROR_VARIABLE var
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_STRIP_TRAILING_WHITESPACE
-  )
 
-  if( res )
-    if(${Ant_FIND_REQUIRED})
-      message( FATAL_ERROR "Error executing ant -version" )
+    # Try to determine Ant version
+    execute_process(COMMAND ${Ant_EXECUTABLE} -version
+        RESULT_VARIABLE res
+        OUTPUT_VARIABLE var
+        ERROR_VARIABLE var
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_STRIP_TRAILING_WHITESPACE
+    )
+
+    if( res )
+        message( STATUS "Warning, could not run ant -version")
+        unset(Ant_EXECUTABLE CACHE)
+        unset(Ant_VERSION)
     else()
-      message( STATUS "Warning, could not run ant -version")
+        # extract major/minor version and patch level from "ant -version" output
+        if(var MATCHES "Apache Ant(.*)version ([0-9]+\\.[0-9]+\\.[0-9_.]+)(.*)")
+            set(Ant_VERSION_STRING "${CMAKE_MATCH_2}")
+        endif()
+        string( REGEX REPLACE "([0-9]+).*" "\\1" Ant_VERSION_MAJOR "${Ant_VERSION_STRING}" )
+        string( REGEX REPLACE "[0-9]+\\.([0-9]+).*" "\\1" Ant_VERSION_MINOR "${Ant_VERSION_STRING}" )
+        string( REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" Ant_VERSION_PATCH "${Ant_VERSION_STRING}" )
+        set(Ant_VERSION ${Ant_VERSION_MAJOR}.${Ant_VERSION_MINOR}.${Ant_VERSION_PATCH})
     endif()
-  else()
-    # extract major/minor version and patch level from "ant -version" output
-    if(var MATCHES "Apache Ant(.*)version ([0-9]+\\.[0-9]+\\.[0-9_.])(.*)")
-      set(Ant_VERSION_STRING "${CMAKE_MATCH_2}")
-    endif()
-    string( REGEX REPLACE "([0-9]+).*" "\\1" Ant_VERSION_MAJOR "${Ant_VERSION_STRING}" )
-    string( REGEX REPLACE "[0-9]+\\.([0-9]+).*" "\\1" Ant_VERSION_MINOR "${Ant_VERSION_STRING}" )
-    string( REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" Ant_VERSION_PATCH "${Ant_VERSION_STRING}" )
-    set(Ant_VERSION ${Ant_VERSION_MAJOR}.${Ant_VERSION_MINOR}.${Ant_VERSION_PATCH})
-  endif()
 
-  if(Ant_FIND_VERSION)
-    if("${Ant_VERSION}" VERSION_LESS "${Ant_FIND_VERSION}")
-      message(FATAL_ERROR "Ant version is too old. Required: ${Ant_FIND_VERSION}, Found: ${Ant_VERSION}")
-    endif()
-  endif()
 endif()
+
+find_package_handle_standard_args(Ant REQUIRED_VARS Ant_EXECUTABLE VERSION_VAR Ant_VERSION)
+mark_as_advanced(Ant_EXECUTABLE)
